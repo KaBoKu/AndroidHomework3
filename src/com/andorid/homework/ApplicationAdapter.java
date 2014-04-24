@@ -33,6 +33,12 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 	private SharedPreferences.Editor preferencesEditor;
 	public static final String MY_PREFERENCES = "myPreferences";
 
+	static class ViewHolder {
+		public TextView appName;
+		public RatingBar ratingBar;
+		public ImageView iconview;
+	}
+
 	public ApplicationAdapter(Context context, int textViewResourceId,
 			List<ApplicationInfo> appsList) {
 		super(context, textViewResourceId, appsList);
@@ -42,12 +48,6 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 
 		preferences = context.getSharedPreferences(MY_PREFERENCES,
 				context.MODE_PRIVATE);
-		// Collections.sort(appsList, new RatingComparator(
-		// packageManager,context));
-		// Collections.sort(appsList,new
-		// DisplayNameComparator2(packageManager));
-		Collections.sort(appsList, new RatingComparatorDesc(packageManager));
-
 	}
 
 	@Override
@@ -72,6 +72,11 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 			LayoutInflater layoutInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = layoutInflater.inflate(R.layout.snippet_list_row, null);
+			ViewHolder vHolder = new ViewHolder();
+			vHolder.appName = (TextView) view.findViewById(R.id.app_name);
+			vHolder.iconview = (ImageView) view.findViewById(R.id.app_icon);
+			vHolder.ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+			view.setTag(vHolder);
 		}
 
 		final ApplicationInfo data = appsList.get(position);
@@ -80,11 +85,15 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 							 * context.getSharedPreferences(MY_PREFERENCES,
 							 * context.MODE_PRIVATE);
 							 */
-			TextView appName = (TextView) view.findViewById(R.id.app_name);
+			ViewHolder vHolder = (ViewHolder)view.getTag();
+			/*TextView appName = (TextView) view.findViewById(R.id.app_name);
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
 
 			ImageView iconview = (ImageView) view.findViewById(R.id.app_icon);
-			iconview.setOnClickListener(new OnClickListener() {
+			vHolder.appName.setText(R.id.app_name);
+			vHolder.ratingBar.setRating(R.id.ratingbar);
+			vHolder.iconview.setImageURI(R.id.app_icon);*/
+			vHolder.iconview.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -94,7 +103,7 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 				}
 			});
 
-			ratingBar
+			vHolder.ratingBar
 					.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
 
 						@Override
@@ -115,10 +124,10 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 						}
 					});
 
-			appName.setText(data.loadLabel(packageManager));
-			ratingBar.setRating(preferences.getFloat(
+			vHolder.appName.setText(data.loadLabel(packageManager));
+			vHolder.ratingBar.setRating(preferences.getFloat(
 					data.loadLabel(packageManager).toString(), 1.0f));
-			iconview.setImageDrawable(data.loadIcon(packageManager));
+			vHolder.iconview.setImageDrawable(data.loadIcon(packageManager));
 		}
 		return view;
 	}
@@ -126,8 +135,27 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 	public ApplicationAdapter sortLex() {
 		Collections.sort(appsList, new ApplicationInfo.DisplayNameComparator(
 				packageManager));
+		this.notifyDataSetChanged();
 		return this;
 	};
+
+	public ApplicationAdapter sortLexDesc() {
+		Collections.sort(appsList, new DisplayNameComparator2(packageManager));
+		this.notifyDataSetChanged();
+		return this;
+	}
+
+	public ApplicationAdapter sortRating() {
+		Collections.sort(appsList, new RatingComparator(packageManager));
+		this.notifyDataSetChanged();
+		return this;
+	}
+
+	public ApplicationAdapter sortRaingDesc() {
+		Collections.sort(appsList, new RatingComparatorDesc(packageManager));
+		this.notifyDataSetChanged();
+		return this;
+	}
 
 	public static class DisplayNameComparator2 implements
 			Comparator<ApplicationInfo> {
@@ -187,7 +215,7 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 		}
 
 	}
-	
+
 	public class RatingComparatorDesc implements Comparator<ApplicationInfo> {
 		PackageManager pm;
 
@@ -223,5 +251,5 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 		}
 
 	}
-	
+
 }

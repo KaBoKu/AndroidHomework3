@@ -1,6 +1,7 @@
 package com.andorid.homework;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +32,10 @@ public class AllAppsActivity extends ListActivity {
 	private List<ApplicationInfo> applist = null;
 	private ApplicationAdapter listadaptor = null;
 	private HashMap<ApplicationInfo, Float > appRating= null;
-
+	private SharedPreferences sh = null;
+	private SharedPreferences.Editor preferencesEditor = null;
+	public static final String MY_PREFERENCES = "myPreferences";
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +43,7 @@ public class AllAppsActivity extends ListActivity {
 
 		packageManager = getPackageManager();
 		new LoadApplications().execute();
+		
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,23 +77,46 @@ public class AllAppsActivity extends ListActivity {
 	private void displayAboutDialog() {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(getString(R.string.about_title));
-		builder.setMessage(getString(R.string.about_desc));
 		
+		builder.setItems(new CharSequence[]
+	            {getString(R.string.sort_lex), getString(R.string.sortuj_lex_desc), getString(R.string.sort_ranked)
+				, getString(R.string.sort_ranked_desc)},
+	            new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int which) {
+	                    // The 'which' argument contains the index position
+	                    // of the selected item
+	                	sh = getApplication().getSharedPreferences(MY_PREFERENCES, MODE_PRIVATE);
+	                	preferencesEditor = sh.edit();
+	                    switch (which) {
+	                        case 0:
+	                        	listadaptor.sortLex();
+	                        	preferencesEditor.putInt("sort_type", 1);
+	                        	preferencesEditor.commit();
+	                        	dialog.cancel();
+	                            break;
+	                        case 1:
+	                            listadaptor.sortLexDesc();
+	                            preferencesEditor.putInt("sort_type", 2);
+	                            preferencesEditor.commit();
+	                            dialog.cancel();
+	                            break;
+	                        case 2:
+	                            listadaptor.sortRating();
+	                            preferencesEditor.putInt("sort_type", 3);
+	                            preferencesEditor.commit();
+	                            dialog.cancel();
+	                            break;
+	                        case 3:
+	                            listadaptor.sortRaingDesc();
+	                            preferencesEditor.putInt("sort_type", 4);
+	                            preferencesEditor.commit();
+	                            dialog.cancel();
+	                            break;
+	                    }
+	                }
+	            });
 		
-		builder.setPositiveButton("WejdŸ na githuba", new DialogInterface.OnClickListener() {
-		       public void onClick(DialogInterface dialog, int id) {
-		    	   Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/KaBoKu"));
-		    	   startActivity(browserIntent);
-		    	   dialog.cancel();
-		       }
-		   });
-		builder.setNegativeButton("Nic nie rób", new DialogInterface.OnClickListener() {
-		       public void onClick(DialogInterface dialog, int id) {
-		            dialog.cancel();
-		       }
-		});
-		 
-		builder.show();
+		builder.create().show();
 	}
 
 	@Override
@@ -145,6 +173,27 @@ public class AllAppsActivity extends ListActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			
+			sh = getApplicationContext().getSharedPreferences(MY_PREFERENCES, MODE_PRIVATE);
+			int sortOrder = sh.getInt("sort_type", 0);
+			switch(sortOrder){
+			case 1:
+				listadaptor.sortLex();
+				break;
+			case 2:
+				listadaptor.sortLexDesc();
+				break;
+				
+			case 3:
+				listadaptor.sortRating();
+				break;
+				
+			case 4:
+				listadaptor.sortRaingDesc();
+				break;
+				
+			default:
+			}
 			
 			setListAdapter(listadaptor);
 			progress.dismiss();

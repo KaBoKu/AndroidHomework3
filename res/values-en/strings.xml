@@ -6,5 +6,9 @@
     <string name="about_desc">Zadanie na zajęcia z PUMY:)</string>
     <string name="action_about">O aplikacji</string>
     <string name="hello_world">Hello world!</string>
+    <string name="sort_lex">Sortuj Alfabetcznie</string>
+    <string name="sortuj_lex_desc">Sortuj Alafbetycznie odwrotnie</string>
+    <string name="sort_ranked">Sortuj po rankingu</string>
+    <string name="sort_ranked_desc">Sortuj po rankingu majeljąco</string>
 
 </resources>
