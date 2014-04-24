@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Oceń appkę</string>
+    <string name="about_title">Andoroid Homework</string>
+    <string name="about_desc">Zadanie na zajęcia z PUMY:)</string>
+    <string name="action_about">O aplikacji</string>
+    <string name="hello_world">Hello world!</string>
+
+</resources>
