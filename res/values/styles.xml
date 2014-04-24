@@ -16,8 +16,11 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+	
+    
 	<style name="RatingBarMod" parent="@android:style/Widget.RatingBar">
-        <item name="android:minHeight">28dip</item>
-        <item name="android:maxHeight">28dip</item>
+        <item name="android:progressDrawable">@drawable/ratingstars</item>
+        <item name="android:minHeight">22dip</item>
+        <item name="android:maxHeight">22dip</item>
     </style>
 </resources>

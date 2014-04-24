@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Oceń appkę</string>
-    <string name="about_title">Andoroid Homework</string>
+    <string name="app_name">Oceń aplikację</string>
+    <string name="about_title">Sortowanie</string>
     <string name="about_desc">Zadanie na zajęcia z PUMY:)</string>
     <string name="action_about">O applikacji</string>
     <string name="hello_world">Hello world!</string>
@@ -10,5 +10,7 @@
     <string name="sortuj_lex_desc">Sortuj Alafbetycznie odwrotnie</string>
     <string name="sort_ranked">Sortuj po rankingu</string>
     <string name="sort_ranked_desc">Sortuj po rankingu majeljąco</string>
+    <string name="icon_of_app">Ikona aplikacji</string>
+    <string name="go_to_market">Idź do marketu</string>
 
 </resources>

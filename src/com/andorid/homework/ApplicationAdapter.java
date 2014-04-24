@@ -19,10 +19,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 	private List<ApplicationInfo> appsList = null;
@@ -37,6 +40,8 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 		public TextView appName;
 		public RatingBar ratingBar;
 		public ImageView iconview;
+		public LinearLayout innerLayout;
+		public Button marketButton;
 	}
 
 	public ApplicationAdapter(Context context, int textViewResourceId,
@@ -76,23 +81,16 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 			vHolder.appName = (TextView) view.findViewById(R.id.app_name);
 			vHolder.iconview = (ImageView) view.findViewById(R.id.app_icon);
 			vHolder.ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+			vHolder.innerLayout = (LinearLayout) view
+					.findViewById(R.id.inner_linear_layout);
+			vHolder.marketButton = (Button) view.findViewById(R.id.button1);
 			view.setTag(vHolder);
 		}
 
 		final ApplicationInfo data = appsList.get(position);
-		if (null != data) {/*
-							 * preferences =
-							 * context.getSharedPreferences(MY_PREFERENCES,
-							 * context.MODE_PRIVATE);
-							 */
-			ViewHolder vHolder = (ViewHolder)view.getTag();
-			/*TextView appName = (TextView) view.findViewById(R.id.app_name);
-			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+		if (null != data) {
+			ViewHolder vHolder = (ViewHolder) view.getTag();
 
-			ImageView iconview = (ImageView) view.findViewById(R.id.app_icon);
-			vHolder.appName.setText(R.id.app_name);
-			vHolder.ratingBar.setRating(R.id.ratingbar);
-			vHolder.iconview.setImageURI(R.id.app_icon);*/
 			vHolder.iconview.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -123,11 +121,42 @@ public class ApplicationAdapter extends ArrayAdapter<ApplicationInfo> {
 
 						}
 					});
+			vHolder.marketButton.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					String id = context.getApplicationInfo().packageName;
+					
+					
+					PackageManager packageManager = context
+							.getApplicationContext().getPackageManager();
+					Uri marketUri = Uri.parse("market://details?id=" + id);
+					Intent marketIntent = new Intent(Intent.ACTION_VIEW)
+							.setData(marketUri);
+					if (marketIntent.resolveActivity(packageManager) != null)
+						context.startActivity(new Intent(Intent.ACTION_VIEW,
+								Uri.parse("market://details?id=" + id)));
+
+					else
+						context.startActivity(new Intent(
+								Intent.ACTION_VIEW,
+								Uri.parse("https://play.google.com/store/apps/details?id="
+										+ id)));
+				}
+			});
 			vHolder.appName.setText(data.loadLabel(packageManager));
 			vHolder.ratingBar.setRating(preferences.getFloat(
 					data.loadLabel(packageManager).toString(), 1.0f));
 			vHolder.iconview.setImageDrawable(data.loadIcon(packageManager));
+			vHolder.innerLayout.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Toast.makeText(getContext(), "TO", 3000);
+				}
+			});
 		}
 		return view;
 	}

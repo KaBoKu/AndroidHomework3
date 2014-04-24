@@ -10,5 +10,6 @@
     <string name="sortuj_lex_desc">Sortuj Alafbetycznie odwrotnie</string>
     <string name="sort_ranked">Sortuj po rankingu</string>
     <string name="sort_ranked_desc">Sortuj po rankingu majeljąco</string>
-
+	<string name="icon_of_app">Ikona aplikacji</string>
+    <string name="go_to_market">Idź do marketu</string>
 </resources>
